@@ -6,6 +6,7 @@
 package set.intersection.java;
 
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
@@ -22,44 +23,74 @@ public class SetIntersectionJava {
      */
     public static void main(String[] args) {    
         Timer time = new Timer();
-//        time.start();
-//        byte a[] = createArray(1000000000, "sorted");
-//        byte b[] = createArray(1000000000, "sorted");
-//        time.end();
-
-//        time.start();
-//        Intersection c = getIntersection(a,b);
-//        time.end();
-
-//        a=null;
-//        b=null;
+        int size= 100000000;
+        //Create arrays
+        byte a[] = createArray(size);
+        byte b[] = createArray(size);
+        System.out.println("For size of "+ size);
+        
+        BitSet q = fillBitSet(a);
+        BitSet p = fillBitSet(a);
+        
+        time.start();
+        BitSet w = new BitSet(q.size());
+        w.or(q);
+        w.and(p);
+        System.out.print("\nBitSet Intersection ");
+        time.end();
+        
+        //Hash Set Test Area
         HashSet h = new HashSet();
         HashSet g = new HashSet();
         time.start();
-        fillHashSet(h,1000000000);
-        fillHashSet(g,1000000000);
+        fillHashSet(h,a);
+        fillHashSet(g,b);
+        System.out.print("\nHashSet fill ");
         time.end();
         
+        //HashSet Intersection
         time.start();
         getIntersection(h,g);
+        System.out.print("\nHashSet Intersection ");
         time.end();
         
+        //Sort the Arrays
+        time.start();
+        Arrays.sort(a);
+        Arrays.sort(b);
+        System.out.print("\nSorting ");
+        time.end();
+
+        //Get Intersection from two sorted arrays
+        time.start();
+        Intersection c = getIntersection(a,b);
+        System.out.print("\nSorted Array Intersection normal algorithm ");
+        time.end();
+        System.out.print("\n");
     }
     
-    public static void fillHashSet(HashSet h,int size){
+    public static BitSet fillBitSet(byte[] a){
+        BitSet b = new BitSet(a.length);
+        for(int i=0; i<a.length; i++){
+            b.set(a[i]);
+        }
+        return b;
+    }
+    
+    public static void fillHashSet(HashSet h, byte[] a){
         Random rand = new Random();
-        for(int i=0; i<size; i++){
-            h.add((byte)rand.nextInt(256));
+        for(int i=0; i<a.length; i++){
+            h.add(a[i]);
         }
     }
     
-    public static byte[] createArray(int size, String s){
+    public static byte[] createArray(int size){
         byte a[] = new byte[size];
         Random rand = new Random();
         for(int i=0; i<size; i++){
-            a[i] = (byte)(rand.nextInt(256));
+            a[i] = (byte)(rand.nextInt(127));
         }
-        if(s != null && s.equals("sorted")) Arrays.sort(a);
+        
         return a;
     }
     
@@ -133,7 +164,7 @@ public class SetIntersectionJava {
         
         public void end(){
             s = System.nanoTime() - s;
-            System.out.println("Elapsed Time: " + s +"ns");
+            System.out.print("Elapsed Time: " + s +"ns");
         }
     }
 }
