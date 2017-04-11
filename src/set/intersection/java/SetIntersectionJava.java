@@ -23,17 +23,18 @@ public class SetIntersectionJava {
      */
     public static void main(String[] args) {    
         Timer time = new Timer();
-        int size= 100000000;
+        int size= 1000000000;
         //Create arrays
         byte a[] = createArray(size);
         byte b[] = createArray(size);
+        
         System.out.println("For size of "+ size);
         
         BitSet q = fillBitSet(a);
         BitSet p = fillBitSet(a);
-        
+        BitSet w = new BitSet(a.length);
         time.start();
-        BitSet w = new BitSet(q.size());
+        
         w.or(q);
         w.and(p);
         System.out.print("\nBitSet Intersection ");
@@ -59,17 +60,27 @@ public class SetIntersectionJava {
         Arrays.sort(a);
         Arrays.sort(b);
         System.out.print("\nSorting ");
-        time.end();
+        long s = time.end();
 
         //Get Intersection from two sorted arrays
         time.start();
         Intersection c = getIntersection(a,b);
         System.out.print("\nSorted Array Intersection normal algorithm ");
-        time.end();
+        long r = time.end();
         System.out.print("\n");
+        
+        
     }
     
     public static BitSet fillBitSet(byte[] a){
+        BitSet b = new BitSet(a.length);
+        for(int i=0; i<a.length; i++){
+            b.set(a[i]);
+        }
+        return b;
+    }
+    
+    public static BitSet fillBitSet(int[] a){
         BitSet b = new BitSet(a.length);
         for(int i=0; i<a.length; i++){
             b.set(a[i]);
@@ -84,11 +95,28 @@ public class SetIntersectionJava {
         }
     }
     
+    public static void fillHashSet(HashSet h, int[] a){
+        Random rand = new Random();
+        for(int i=0; i<a.length; i++){
+            h.add(a[i]);
+        }
+    }
+    
     public static byte[] createArray(int size){
         byte a[] = new byte[size];
         Random rand = new Random();
         for(int i=0; i<size; i++){
             a[i] = (byte)(rand.nextInt(127));
+        }
+        
+        return a;
+    }
+    
+    public static int[] createIntArray(int size){
+        int a[] = new int[size];
+        Random rand = new Random();
+        for(int i=0; i<size; i++){
+            a[i] = rand.nextInt(Integer.MAX_VALUE);
         }
         
         return a;
@@ -130,20 +158,52 @@ public class SetIntersectionJava {
         
         return c;
     }
+    
+    public static Intersection getIntersection(int[] a, int[] b){
+        Intersection c = new Intersection(a.length,"int");
+        int i=0;
+        int j=0;
+        while(i < a.length && j < b.length){
+            if(( i<a.length && j<b.length) && a[i]<b[j]) i++;
+            
+            if(( i<a.length && j<b.length) && a[i]>b[j]) j++;
+            if(( i<a.length && j<b.length) && a[i]==b[j]){
+                c.addTo(a[i],"int");
+                i++;
+                j++;
+            }
+        }
+        
+        
+        return c;
+    }
+    
     public static class Intersection{
         byte[] a;
         int capacity;
-        
+        int[] b;
         Intersection(int size){
             a = new byte[size];
             capacity=0;
+        }
+        
+        Intersection(int size, String form){
+            if(form.equals("int")){
+                b = new int[size];
+                capacity=0;
+            }
         }
         
         public void addTo(int n){
             a[capacity]=(byte)n;
             capacity++;
         }
-        
+        public void addTo(int n, String form){
+            if(form.equals("int")){
+                b[capacity]=n;
+                capacity++;
+            }
+        }
         public void print(){
             for(int i=0; i<capacity; i++){
                 System.out.print(a[i]+" ");
@@ -162,9 +222,10 @@ public class SetIntersectionJava {
             s = System.nanoTime();
         }
         
-        public void end(){
+        public long end(){
             s = System.nanoTime() - s;
             System.out.print("Elapsed Time: " + s +"ns");
+            return s;
         }
     }
 }
