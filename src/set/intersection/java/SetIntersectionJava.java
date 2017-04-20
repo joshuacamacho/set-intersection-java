@@ -23,7 +23,7 @@ public class SetIntersectionJava {
      */
     public static void main(String[] args) {    
         Timer time = new Timer();
-        int size= 1000000;
+        int size= 10000000;
         //Create arrays
         int a[] = createIntArray(size);
         int b[] = createIntArray(size);
