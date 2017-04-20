@@ -23,35 +23,30 @@ public class SetIntersectionJava {
      */
     public static void main(String[] args) {    
         Timer time = new Timer();
-        int size= 1000000000;
+        int size= 1000000;
         //Create arrays
-        byte a[] = createArray(size);
-        byte b[] = createArray(size);
+        int a[] = createIntArray(size);
+        int b[] = createIntArray(size);
         
         System.out.println("For size of "+ size);
         
         BitSet q = fillBitSet(a);
         BitSet p = fillBitSet(a);
-        BitSet w = new BitSet(a.length);
         time.start();
-        
-        w.or(q);
-        w.and(p);
+        q.and(p);
         System.out.print("\nBitSet Intersection ");
         time.end();
         
         //Hash Set Test Area
-        HashSet h = new HashSet();
         HashSet g = new HashSet();
         time.start();
-        fillHashSet(h,a);
         fillHashSet(g,b);
         System.out.print("\nHashSet fill ");
         time.end();
         
         //HashSet Intersection
         time.start();
-        getIntersection(h,g);
+        getIntersection(a,g);
         System.out.print("\nHashSet Intersection ");
         time.end();
         
@@ -73,7 +68,7 @@ public class SetIntersectionJava {
     }
     
     public static BitSet fillBitSet(byte[] a){
-        BitSet b = new BitSet(a.length);
+        BitSet b = new BitSet();
         for(int i=0; i<a.length; i++){
             b.set(a[i]);
         }
@@ -81,7 +76,7 @@ public class SetIntersectionJava {
     }
     
     public static BitSet fillBitSet(int[] a){
-        BitSet b = new BitSet(a.length);
+        BitSet b = new BitSet();
         for(int i=0; i<a.length; i++){
             b.set(a[i]);
         }
@@ -89,14 +84,12 @@ public class SetIntersectionJava {
     }
     
     public static void fillHashSet(HashSet h, byte[] a){
-        Random rand = new Random();
         for(int i=0; i<a.length; i++){
             h.add(a[i]);
         }
     }
     
     public static void fillHashSet(HashSet h, int[] a){
-        Random rand = new Random();
         for(int i=0; i<a.length; i++){
             h.add(a[i]);
         }
@@ -129,14 +122,13 @@ public class SetIntersectionJava {
         System.out.print("\n");
     }
     
-    public static HashSet getIntersection(HashSet a, HashSet b){
+    public static HashSet getIntersection(int[] a, HashSet b){
         HashSet c = new HashSet();
-        // create an iterator
-        Iterator iterator = c.iterator(); 
-      
         // check values
-        while (iterator.hasNext()){
-            System.out.println(c.add(iterator.next()));  
+        for(int i=0; i<a.length; i++){
+            if(b.contains(a[i])){ 
+                c.add(a[i]);
+            }
         }
         return c;
     }
